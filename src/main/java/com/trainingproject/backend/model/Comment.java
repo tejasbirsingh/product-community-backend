@@ -24,15 +24,15 @@ public class Comment {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
-	@NotEmpty
+	@NotEmpty 
 	private String text;
 	@ManyToOne(fetch = LAZY)
-	@JoinColumn(name = "postId", referencedColumnName = "postId")
-	private Post post;
+	@JoinColumn(name = "questionId", referencedColumnName = "questionId")
+	private Question question;
 	private Instant createdDate;
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "userId", referencedColumnName = "userId")
 	private User user;
-	// new addition
 	private Integer voteCount = 0;
+	private boolean accepted = false;
 }

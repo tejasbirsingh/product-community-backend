@@ -7,11 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostRequest {
+public class QuestionRequest {
 
-	private Long postId;
-	private String subredditName;
-	private String postName;
+	private Long questionId;
+	private String categoryName;
+	private String questionName;
 	private String url;
 	private String description;
+	private String productId;
 }

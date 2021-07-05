@@ -18,7 +18,7 @@ import com.trainingproject.backend.dto.AuthenticationResponse;
 import com.trainingproject.backend.dto.LoginRequest;
 import com.trainingproject.backend.dto.RefreshTokenRequest;
 import com.trainingproject.backend.dto.RegisterRequest;
-import com.trainingproject.backend.exceptions.SpringRedditException;
+import com.trainingproject.backend.exceptions.ProductWebsiteException;
 import com.trainingproject.backend.model.NotificationEmail;
 import com.trainingproject.backend.model.User;
 import com.trainingproject.backend.model.VerificationToken;
@@ -53,7 +53,7 @@ public class AuthService {
 
 		String token = generateVerificationToken(user);
 		mailService.sendMail(new NotificationEmail("Please Activate your Account", user.getEmail(),
-				"Thank you for signing up to our Blog post , "
+				"Thank you for signing up to our Community Website , "
 						+ "please click on the below url to activate your account : "
 						+ "http://localhost:8080/api/auth/accountVerification/" + token));
 	}
@@ -69,7 +69,7 @@ public class AuthService {
 	private void fetchUserAndEnable(VerificationToken verificationToken) {
 		String username = verificationToken.getUser().getUsername();
 		User user = userRepository.findByUsername(username)
-				.orElseThrow(() -> new SpringRedditException("User not found with name - " + username));
+				.orElseThrow(() -> new ProductWebsiteException("User not found with name - " + username));
 		user.setEnabled(true);
 		userRepository.save(user);
 	}
@@ -86,24 +86,28 @@ public class AuthService {
 
 	public void verifyAccount(String token) {
 		Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
-		fetchUserAndEnable(verificationToken.orElseThrow(() -> new SpringRedditException("Invalid Token")));
+		fetchUserAndEnable(verificationToken.orElseThrow(() -> new ProductWebsiteException("Invalid Token")));
 	}
 
 	public AuthenticationResponse login(LoginRequest loginRequest) {
+	    	// authenticate the user using the spring security features
 		Authentication authenticate = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authenticate);
 		String token = jwtProvider.generateToken(authenticate);
-		return AuthenticationResponse.builder().authenticationToken(token)
+		return AuthenticationResponse.builder().authenticationToken(token)				
 				.refreshToken(refreshTokenService.generateRefreshToken().getToken())
 				.expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
 				.username(loginRequest.getUsername()).build();
 	}
 
 	public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
-		refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
-		String token = jwtProvider.generateTokenWithUserName(refreshTokenRequest.getUsername());
-		return AuthenticationResponse.builder().authenticationToken(token)
+		// check if the token is valid
+	    	refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+	    	// Generate new token with the username
+	    	String token = jwtProvider.generateTokenWithUserName(refreshTokenRequest.getUsername());
+		// return the response with old and new token that will be save by frontend 
+	    	return AuthenticationResponse.builder().authenticationToken(token)
 				.refreshToken(refreshTokenRequest.getRefreshToken())
 				.expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
 				.username(refreshTokenRequest.getUsername()).build();
@@ -112,5 +116,8 @@ public class AuthService {
 	public boolean isLoggedIn() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
+	}
+	public int getTotalUsers() {
+	    return userRepository.findAll().size();
 	}
 }

@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.trainingproject.backend.dto.CommentVoteDto;
-import com.trainingproject.backend.exceptions.PostNotFoundException;
-import com.trainingproject.backend.exceptions.SpringRedditException;
+import com.trainingproject.backend.exceptions.QuestionNotFoundException;
+import com.trainingproject.backend.exceptions.ProductWebsiteException;
 import com.trainingproject.backend.model.Comment;
 import com.trainingproject.backend.model.CommentVote;
 import com.trainingproject.backend.repository.CommentRepository;
@@ -29,14 +29,14 @@ public class CommentVoteService {
 	public void vote(CommentVoteDto commentvoteDto) {
 //		System.err.println(commentvoteDto.getCommentId());
 		Comment comment = commentRepository.findById(commentvoteDto.getCommentId()).orElseThrow(
-				() -> new PostNotFoundException("Comment Not Found with ID - " + commentvoteDto.getCommentId()));
+				() -> new QuestionNotFoundException("Comment Not Found with ID - " + commentvoteDto.getCommentId()));
 
 		Optional<CommentVote> voteByCommentAndUser = commentVoteRepository
 				.findTopByCommentAndUserOrderByVoteIdDesc(comment, authService.getCurrentUser());
 
 		if (voteByCommentAndUser.isPresent()
 				&& voteByCommentAndUser.get().getVoteType().equals(commentvoteDto.getVoteType())) {
-			throw new SpringRedditException("You have already" + commentvoteDto.getVoteType() + "'d for this comment");
+			throw new ProductWebsiteException("You have already" + commentvoteDto.getVoteType() + "'d for this comment");
 		}
 
 		if (UPVOTE.equals(commentvoteDto.getVoteType())) {

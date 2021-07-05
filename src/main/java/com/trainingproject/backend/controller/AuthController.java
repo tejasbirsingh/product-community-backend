@@ -2,9 +2,11 @@ package com.trainingproject.backend.controller;
 
 
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.ResponseEntity.status;
 
 import javax.validation.Valid;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +43,11 @@ public class AuthController {
     public ResponseEntity<String> verifyAccount(@PathVariable String token) {
         authService.verifyAccount(token);
         return new ResponseEntity<>("Account Activated Successfully", OK);
+    }
+
+    @GetMapping("/total-users")
+    public ResponseEntity<Integer> getTotalUsers() {
+	return status(HttpStatus.OK).body(authService.getTotalUsers());
     }
 
     @PostMapping("/login")

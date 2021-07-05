@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.trainingproject.backend.exceptions.SpringRedditException;
+import com.trainingproject.backend.exceptions.ProductWebsiteException;
 import com.trainingproject.backend.model.RefreshToken;
 import com.trainingproject.backend.repository.RefreshTokenRepository;
 
@@ -28,7 +28,7 @@ public class RefreshTokenService {
 	}
 
 	void validateRefreshToken(String token) {
-		refreshTokenRepository.findByToken(token).orElseThrow(() -> new SpringRedditException("Invalid refresh Token"));
+		refreshTokenRepository.findByToken(token).orElseThrow(() -> new ProductWebsiteException("Invalid refresh Token"));
 	}
 
 	public void deleteRefreshToken(String token) {

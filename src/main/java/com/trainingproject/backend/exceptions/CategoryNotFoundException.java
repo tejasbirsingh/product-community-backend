@@ -1,12 +1,12 @@
 package com.trainingproject.backend.exceptions;
 
-public class SubredditNotFoundException extends RuntimeException {
+public class CategoryNotFoundException extends RuntimeException {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public SubredditNotFoundException(String message) {
+	public CategoryNotFoundException(String message) {
 		super(message);
 	}
 }

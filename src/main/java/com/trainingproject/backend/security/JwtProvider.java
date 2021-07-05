@@ -1,23 +1,30 @@
 package com.trainingproject.backend.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import static io.jsonwebtoken.Jwts.parser;
+import static java.util.Date.from;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+import java.sql.Date;
+import java.time.Instant;
+
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import com.trainingproject.backend.exceptions.SpringRedditException;
+import com.trainingproject.backend.exceptions.ProductWebsiteException;
 
-import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.*;
-import java.security.cert.CertificateException;
-import java.sql.Date;
-import java.time.Instant;
-import static io.jsonwebtoken.Jwts.parser;
-
-import static java.util.Date.from;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 
 @Service
 public class JwtProvider {
@@ -33,7 +40,7 @@ public class JwtProvider {
             InputStream resourceAsStream = getClass().getResourceAsStream("/springblog.jks");
             keyStore.load(resourceAsStream, "secret".toCharArray());
         } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException e) {
-            throw new SpringRedditException("Exception occurred while loading keystore", e);
+            throw new ProductWebsiteException("Exception occurred while loading keystore", e);
         }
 
     }
@@ -61,7 +68,7 @@ public class JwtProvider {
         try {
             return (PrivateKey) keyStore.getKey("springblog", "secret".toCharArray());
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
-            throw new SpringRedditException("Exception occured while retrieving public key from keystore", e);
+            throw new ProductWebsiteException("Exception occured while retrieving public key from keystore", e);
         }
     }
 
@@ -74,15 +81,14 @@ public class JwtProvider {
         try {
             return keyStore.getCertificate("springblog").getPublicKey();
         } catch (KeyStoreException e) {
-            throw new SpringRedditException("Exception occured while " +
+            throw new ProductWebsiteException("Exception occured while " +
                     "retrieving public key from keystore", e);
         }
     }
 
     public String getUsernameFromJwt(String token) {
         Claims claims = parser()
-                .setSigningKey(getPublickey())
-                
+                .setSigningKey(getPublickey())                
                 .parseClaimsJws(token)
                 .getBody();
 

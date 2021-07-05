@@ -25,17 +25,20 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Post {
+public class Question {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	private Long postId;
-	@NotBlank(message = "Post Name cannot be empty or Null")
-	private String postName;
+	private Long questionId;
+	@NotBlank(message = "Question Name cannot be empty or Null")
+	private String questionName;
 	@Nullable
 	private String url;
 	@Nullable
 	@Lob
 	private String description;
+	private boolean closed = false;
+	private Long answerId;
+	private String productId;
 	private Integer voteCount = 0;
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "userId", referencedColumnName = "userId")
@@ -43,5 +46,5 @@ public class Post {
 	private Instant createdDate;
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "id", referencedColumnName = "id")
-	private Subreddit subreddit;
+	private Category category;
 }

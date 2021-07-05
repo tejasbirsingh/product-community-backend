@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Builder
-public class Subreddit {
+public class Category {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
@@ -32,7 +32,7 @@ public class Subreddit {
 	@NotBlank(message = "Description is required")
 	private String description;
 	@OneToMany(fetch = LAZY)
-	private List<Post> posts;
+	private List<Question> questions;
 	private Instant createdDate;
 	@ManyToOne(fetch = LAZY)
 	private User user;

@@ -14,18 +14,16 @@ import com.trainingproject.backend.dto.CommentRequest;
 import com.trainingproject.backend.dto.CommentResponse;
 import com.trainingproject.backend.model.Comment;
 import com.trainingproject.backend.model.CommentVote;
-import com.trainingproject.backend.model.Post;
+import com.trainingproject.backend.model.Question;
 import com.trainingproject.backend.model.User;
 import com.trainingproject.backend.model.VoteType;
-import com.trainingproject.backend.repository.CommentRepository;
 import com.trainingproject.backend.repository.CommentVoteRepository;
 import com.trainingproject.backend.service.AuthService;
 
 @Mapper(componentModel = "spring")
 public abstract class CommentMapper {
 
-	@Autowired
-	private CommentRepository commentRepository;
+
 	@Autowired
 	private CommentVoteRepository voteRepository;
 	@Autowired
@@ -33,30 +31,35 @@ public abstract class CommentMapper {
 
 	@Mappings({ @Mapping(target = "id", ignore = true), @Mapping(target = "text", source = "commentsDto.text"),
 			@Mapping(target = "createdDate", expression = "java(java.time.Instant.now())"),
-			@Mapping(target = "post", source = "post"), @Mapping(target = "user", source = "user"),
-			@Mapping(target = "voteCount", constant = "0") })
+			@Mapping(target = "question", source = "question"), @Mapping(target = "user", source = "user"),
+			@Mapping(target = "voteCount", constant = "0") ,
+			@Mapping(target = "accepted", constant="false")})
 
-	public abstract Comment map(CommentRequest commentsDto, Post post, User user);
+	public abstract Comment map(CommentRequest commentsDto, Question question, User user);
 
-	@Mappings({ @Mapping(target = "postId", expression = "java(comment.getPost().getPostId())"),
+	@Mappings({ @Mapping(target = "questionId", expression = "java(comment.getQuestion().getQuestionId())"),
 			@Mapping(target = "userName", expression = "java(comment.getUser().getUsername())"),
 			@Mapping(target = "upVote", expression = "java(isCommentUpVoted(comment))"),
-			@Mapping(target = "downVote", expression = "java(isCommentDownVoted(comment))") })
+			@Mapping(target = "downVote", expression = "java(isCommentDownVoted(comment))"),
+			@Mapping(target ="accepted", expression="java(isAnswered(comment))")})
 	public abstract CommentResponse mapToDto(Comment comment);
 
-	boolean isCommentUpVoted(Comment post) {
-		return checkVoteType(post, UPVOTE);
+	boolean isCommentUpVoted(Comment comment) {
+		return checkVoteType(comment, UPVOTE);
 	}
 
-	boolean isCommentDownVoted(Comment post) {
-		return checkVoteType(post, DOWNVOTE);
+	boolean isAnswered(Comment comment) {
+	    return comment.isAccepted();
+	}
+	boolean isCommentDownVoted(Comment comment) {
+		return checkVoteType(comment, DOWNVOTE);
 	}
 
 	private boolean checkVoteType(Comment comment, VoteType voteType) {
 		if (authService.isLoggedIn()) {
-			Optional<CommentVote> voteForPostByUser = voteRepository.findTopByCommentAndUserOrderByVoteIdDesc(comment,
+			Optional<CommentVote> voteForQuestionByUser = voteRepository.findTopByCommentAndUserOrderByVoteIdDesc(comment,
 					authService.getCurrentUser());
-			return voteForPostByUser.filter(vote -> vote.getVoteType().equals(voteType)).isPresent();
+			return voteForQuestionByUser.filter(vote -> vote.getVoteType().equals(voteType)).isPresent();
 		}
 		return false;
 	}

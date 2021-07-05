@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class CommentRequest {
 
 	private Long id;
-	private Long postId;
+	private Long questionId;
 	private String text;
 	private String userName;
 

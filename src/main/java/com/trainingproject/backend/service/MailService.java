@@ -7,7 +7,7 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.trainingproject.backend.exceptions.SpringRedditException;
+import com.trainingproject.backend.exceptions.ProductWebsiteException;
 import com.trainingproject.backend.model.NotificationEmail;
 
 import lombok.AllArgsConstructor;
@@ -34,7 +34,7 @@ class MailService {
 			log.info("Activation email sent!!");
 		} catch (MailException e) {
 			log.error("Exception occurred when sending mail", e);
-			throw new SpringRedditException(
+			throw new ProductWebsiteException(
 					"Exception occurred when sending mail to " + notificationEmail.getRecipient(), e);
 		}
 	}

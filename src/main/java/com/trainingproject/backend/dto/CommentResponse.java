@@ -11,11 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommentResponse {
 	private Long id;
-	private Long postId;
+	private Long questionId;
 	private Instant createdDate;
 	private String text;
 	private String userName;
 	private Integer voteCount;
 	private boolean upVote;
 	private boolean downVote;
+	private boolean accepted = false;
 }

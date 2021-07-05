@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.trainingproject.backend.dto.VoteDto;
-import com.trainingproject.backend.exceptions.PostNotFoundException;
-import com.trainingproject.backend.exceptions.SpringRedditException;
-import com.trainingproject.backend.model.Post;
+import com.trainingproject.backend.exceptions.QuestionNotFoundException;
+import com.trainingproject.backend.exceptions.ProductWebsiteException;
+import com.trainingproject.backend.model.Question;
 import com.trainingproject.backend.model.Vote;
-import com.trainingproject.backend.repository.PostRepository;
+import com.trainingproject.backend.repository.QuestionRepository;
 import com.trainingproject.backend.repository.VoteRepository;
 
 import lombok.AllArgsConstructor;
@@ -22,28 +22,28 @@ import lombok.AllArgsConstructor;
 public class VoteService {
 
 	private final VoteRepository voteRepository;
-	private final PostRepository postRepository;
+	private final QuestionRepository questionRepository;
 	private final AuthService authService;
 
 	@Transactional
 	public void vote(VoteDto voteDto) {
-		Post post = postRepository.findById(voteDto.getPostId())
-				.orElseThrow(() -> new PostNotFoundException("Post Not Found with ID - " + voteDto.getPostId()));
-		Optional<Vote> voteByPostAndUser = voteRepository.findTopByPostAndUserOrderByVoteIdDesc(post,
+		Question question = questionRepository.findById(voteDto.getQuestionId())
+				.orElseThrow(() -> new QuestionNotFoundException("Post Not Found with ID - " + voteDto.getQuestionId()));
+		Optional<Vote> voteByQuestionAndUser = voteRepository.findTopByQuestionAndUserOrderByVoteIdDesc(question,
 				authService.getCurrentUser());
-		if (voteByPostAndUser.isPresent() && voteByPostAndUser.get().getVoteType().equals(voteDto.getVoteType())) {
-			throw new SpringRedditException("You have already" + voteDto.getVoteType() + "'d for this post");
+		if (voteByQuestionAndUser.isPresent() && voteByQuestionAndUser.get().getVoteType().equals(voteDto.getVoteType())) {
+			throw new ProductWebsiteException("You have already" + voteDto.getVoteType() + "'d for this post");
 		}
 		if (UPVOTE.equals(voteDto.getVoteType())) {
-			post.setVoteCount(post.getVoteCount() + 1);
+			question.setVoteCount(question.getVoteCount() + 1);
 		} else {
-			post.setVoteCount(post.getVoteCount() - 1);
+			question.setVoteCount(question.getVoteCount() - 1);
 		}
-		voteRepository.save(mapToVote(voteDto, post));
-		postRepository.save(post);
+		voteRepository.save(mapToVote(voteDto, question));
+		questionRepository.save(question);
 	}
 
-	private Vote mapToVote(VoteDto voteDto, Post post) {
-		return Vote.builder().voteType(voteDto.getVoteType()).post(post).user(authService.getCurrentUser()).build();
+	private Vote mapToVote(VoteDto voteDto, Question question) {
+		return Vote.builder().voteType(voteDto.getVoteType()).question(question).user(authService.getCurrentUser()).build();
 	}
 }

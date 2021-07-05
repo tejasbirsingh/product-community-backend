@@ -31,9 +31,9 @@ public class CommentsController {
 		return new ResponseEntity<>(CREATED);
 	}
 
-	@GetMapping("/by-post/{postId}")
-	public ResponseEntity<List<CommentResponse>> getAllCommentsForPost(@PathVariable Long postId) {
-		return ResponseEntity.status(OK).body(commentService.getAllCommentsForPost(postId));
+	@GetMapping("/by-question/{questionId}")
+	public ResponseEntity<List<CommentResponse>> getAllCommentsForQuestion(@PathVariable Long questionId) {
+		return ResponseEntity.status(OK).body(commentService.getAllCommentsForQuestion(questionId));
 	}
 
 	@GetMapping("/by-user/{userName}")
@@ -45,5 +45,11 @@ public class CommentsController {
 	public ResponseEntity<CommentResponse> getComment(@PathVariable Long commentId) {
 		return ResponseEntity.status(OK).body(commentService.getComment(commentId));
 	}
+	@GetMapping("/accept/{commentId}")
+	public ResponseEntity<Void> accept(@PathVariable Long commentId) {
+	    	commentService.accept(commentId);
+		return new ResponseEntity<>(OK);
+	}
+	
 
 }
