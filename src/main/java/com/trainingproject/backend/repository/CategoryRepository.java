@@ -10,5 +10,5 @@ import com.trainingproject.backend.model.Category;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    Optional<Category> findByName(String subredditName);
+    Optional<Category> findByName(String categoryName);
 }

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.trainingproject.backend.dto.QuestionRequest;
 import com.trainingproject.backend.dto.QuestionResponse;
-import com.trainingproject.backend.model.Question;
 import com.trainingproject.backend.service.QuestionService;
 
 import lombok.AllArgsConstructor;
@@ -75,9 +74,10 @@ public class QuestionController {
 	}
 	
 	@PutMapping("/update")
-	public ResponseEntity<Void> updateQuestion(@RequestBody Question question) {
+	public ResponseEntity<Void> updateQuestion(@RequestBody QuestionResponse question) {
+	    System.out.println(question.toString());
 		questionService.update(question);
-		return new ResponseEntity<>(HttpStatus.CREATED);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 

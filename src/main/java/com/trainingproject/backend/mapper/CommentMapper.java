@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.github.marlonlom.utilities.timeago.TimeAgo;
 import com.trainingproject.backend.dto.CommentRequest;
 import com.trainingproject.backend.dto.CommentResponse;
 import com.trainingproject.backend.model.Comment;
@@ -41,11 +42,16 @@ public abstract class CommentMapper {
 			@Mapping(target = "userName", expression = "java(comment.getUser().getUsername())"),
 			@Mapping(target = "upVote", expression = "java(isCommentUpVoted(comment))"),
 			@Mapping(target = "downVote", expression = "java(isCommentDownVoted(comment))"),
-			@Mapping(target ="accepted", expression="java(isAnswered(comment))")})
+			@Mapping(target ="accepted", expression="java(isAnswered(comment))"),
+			@Mapping(target = "createdDate", expression = "java(getDuration(comment))"),
+})
 	public abstract CommentResponse mapToDto(Comment comment);
 
 	boolean isCommentUpVoted(Comment comment) {
 		return checkVoteType(comment, UPVOTE);
+	}
+	String getDuration(Comment comment) {
+		return TimeAgo.using(comment.getCreatedDate().toEpochMilli());
 	}
 
 	boolean isAnswered(Comment comment) {

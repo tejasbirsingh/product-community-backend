@@ -32,6 +32,7 @@ public class Question {
 	@NotBlank(message = "Question Name cannot be empty or Null")
 	private String questionName;
 	@Nullable
+	@Lob
 	private String url;
 	@Nullable
 	@Lob

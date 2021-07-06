@@ -34,13 +34,21 @@ public class QuestionService {
 	private final QuestionMapper questionMapper;
 
 	public void save(QuestionRequest questionRequest) {
-		Category subreddit = categoryRepository.findByName(questionRequest.getCategoryName())
+		Category category = categoryRepository.findByName(questionRequest.getCategoryName())
 				.orElseThrow(() -> new CategoryNotFoundException(questionRequest.getCategoryName()));
-		questionRepository.save(questionMapper.map(questionRequest, subreddit, authService.getCurrentUser()));
+		questionRepository.save(questionMapper.map(questionRequest, category, authService.getCurrentUser()));
 	}
 	
-	public void update(Question question) {		
-		questionRepository.save(question);
+	public void update(QuestionResponse updatedQues) {
+	    Question ques = questionRepository.findById(updatedQues.getId()).orElseThrow(()-> new QuestionNotFoundException(updatedQues.getId().toString()));
+	    Category category = categoryRepository.findByName(updatedQues.getCategoryName())
+			.orElseThrow(() -> new CategoryNotFoundException(updatedQues.getCategoryName()));
+	    ques.setQuestionName(updatedQues.getQuestionName());
+	    ques.setCategory(category);
+	    ques.setDescription(updatedQues.getDescription());
+	    ques.setUrl(updatedQues.getUrl());
+	    ques.setProductId(updatedQues.getProductId());
+	    ques.setCreatedDate(java.time.Instant.now());
 	}
 	
 	public void close(Long id, Long answerId) {

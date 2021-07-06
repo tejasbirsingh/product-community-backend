@@ -6,6 +6,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 import java.time.Instant;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -27,6 +28,7 @@ public class Category {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
+	@Column(unique = true)
 	@NotBlank(message = "Community name is required")
 	private String name;
 	@NotBlank(message = "Description is required")
