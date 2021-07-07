@@ -7,11 +7,14 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentRequest {
-
+public class AnswerResponse {
 	private Long id;
 	private Long questionId;
+	private String createdDate;
 	private String text;
 	private String userName;
-
+	private Integer voteCount;
+	private boolean upVote;
+	private boolean downVote;
+	private boolean accepted = false;
 }

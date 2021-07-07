@@ -15,7 +15,7 @@ public class QuestionResponse {
 	private String userName;
 	private String categoryName;
 	private Integer voteCount;
-	private Integer commentCount;
+	private Integer answerCount;
 	private String duration;
 	private boolean upVote;
 	private boolean downVote;

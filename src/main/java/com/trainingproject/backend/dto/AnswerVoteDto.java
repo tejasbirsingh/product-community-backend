@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommentVoteDto {
+public class AnswerVoteDto {
 	VoteType voteType;
-	private Long commentId;
+	private Long answerId;
 }

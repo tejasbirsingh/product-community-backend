@@ -24,14 +24,15 @@ class MailService {
 	void sendMail(NotificationEmail notificationEmail) {
 		MimeMessagePreparator messagePreparator = mimeMessage -> {
 			MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-			messageHelper.setFrom("blogpost@email.com");
+			messageHelper.setFrom("productcommunity@email.com");
 			messageHelper.setTo(notificationEmail.getRecipient());
 			messageHelper.setSubject(notificationEmail.getSubject());
-			messageHelper.setText(notificationEmail.getBody());
+			messageHelper.setText(notificationEmail.getBody(), true);
+
 		};
 		try {
 			mailSender.send(messagePreparator);
-			log.info("Activation email sent!!");
+			log.info("Email sent to user account");
 		} catch (MailException e) {
 			log.error("Exception occurred when sending mail", e);
 			throw new ProductWebsiteException(

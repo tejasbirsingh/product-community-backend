@@ -18,7 +18,7 @@ import com.trainingproject.backend.model.Question;
 import com.trainingproject.backend.model.User;
 import com.trainingproject.backend.model.Vote;
 import com.trainingproject.backend.model.VoteType;
-import com.trainingproject.backend.repository.CommentRepository;
+import com.trainingproject.backend.repository.AnswerRepository;
 import com.trainingproject.backend.repository.VoteRepository;
 import com.trainingproject.backend.service.AuthService;
 
@@ -26,7 +26,7 @@ import com.trainingproject.backend.service.AuthService;
 public abstract class QuestionMapper {
 
 	@Autowired
-	private CommentRepository commentRepository;
+	private AnswerRepository answerRepository;
 	@Autowired
 	private VoteRepository voteRepository;
 	@Autowired
@@ -44,7 +44,7 @@ public abstract class QuestionMapper {
 	@Mappings({ @Mapping(target = "id", source = "questionId"),
 			@Mapping(target = "categoryName", source = "category.name"),
 			@Mapping(target = "userName", source = "user.username"),
-			@Mapping(target = "commentCount", expression = "java(commentCount(question))"),
+			@Mapping(target = "answerCount", expression = "java(answerCount(question))"),
 			@Mapping(target = "duration", expression = "java(getDuration(question))"),
 			@Mapping(target = "upVote", expression = "java(isQuestionUpVoted(question))"),
 			@Mapping(target = "downVote", expression = "java(isQuestionDownVoted(question))") ,
@@ -56,8 +56,8 @@ public abstract class QuestionMapper {
 
 	public abstract QuestionResponse mapToDto(Question question);
 
-	Integer commentCount(Question question) {
-		return commentRepository.findByQuestion(question).size();
+	Integer answerCount(Question question) {
+		return answerRepository.findByQuestion(question).size();
 	}
 	
 	boolean isAnswered(Question question) {

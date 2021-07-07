@@ -7,22 +7,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.trainingproject.backend.dto.CommentVoteDto;
-import com.trainingproject.backend.service.CommentVoteService;
+import com.trainingproject.backend.dto.AnswerVoteDto;
+import com.trainingproject.backend.service.AnswerVoteService;
 
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/api/comment-votes/")
+@RequestMapping("/api/answer-votes/")
 @AllArgsConstructor
-public class CommentVoteController {
+public class AnswerVoteController {
 
-	private CommentVoteService commentVoteService;
+	private AnswerVoteService answerVoteService;
 
 	@PostMapping
-	public ResponseEntity<Void> vote(@RequestBody CommentVoteDto commentVoteDto) {
+	public ResponseEntity<Void> vote(@RequestBody AnswerVoteDto answerVoteDto) {
 
-		commentVoteService.vote(commentVoteDto);
+		answerVoteService.vote(answerVoteDto);
 
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

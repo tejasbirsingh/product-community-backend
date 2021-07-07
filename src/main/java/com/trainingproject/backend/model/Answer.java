@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Comment {
+public class Answer {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;

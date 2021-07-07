@@ -37,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/api/category/**").permitAll().antMatchers(HttpMethod.GET, "/api/questions/")
 				.permitAll().antMatchers(HttpMethod.GET, "/api/questions/**")
 				.permitAll().antMatchers(HttpMethod.PUT, "/api/questions/**").permitAll()
-				.antMatchers(HttpMethod.GET, "/api/comments/**").permitAll()
+				.antMatchers(HttpMethod.GET, "/api/answers/**").permitAll()
 
 				.antMatchers("/v2/api-docs", "/configuration/ui", "/configuration/security",
 						 "/webjars/**")

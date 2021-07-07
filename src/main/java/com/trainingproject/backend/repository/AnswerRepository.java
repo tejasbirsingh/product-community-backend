@@ -5,14 +5,14 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.trainingproject.backend.model.Comment;
+import com.trainingproject.backend.model.Answer;
 import com.trainingproject.backend.model.Question;
 import com.trainingproject.backend.model.User;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, Long> {
+public interface AnswerRepository extends JpaRepository<Answer, Long> {
     
-    List<Comment> findByQuestion(Question question);
+    List<Answer> findByQuestion(Question question);
 
-    List<Comment> findAllByUser(User user);
+    List<Answer> findAllByUser(User user);
 }

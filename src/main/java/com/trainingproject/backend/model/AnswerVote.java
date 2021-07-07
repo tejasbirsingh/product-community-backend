@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Builder
-public class CommentVote {
+public class AnswerVote {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private Long voteId;
@@ -28,7 +28,7 @@ public class CommentVote {
 	@NotNull
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "id", referencedColumnName = "id")
-	private Comment comment;
+	private Answer answer;
 	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "userId", referencedColumnName = "userId")
 	private User user;
